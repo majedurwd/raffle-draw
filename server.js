@@ -22,6 +22,7 @@ app.use((err, _req, res, _next) => {
             msg: err.message
         })
     }
+    res.status(500).json({msg: "Something went wrong"})
 })
 
 
