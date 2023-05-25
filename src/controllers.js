@@ -32,3 +32,99 @@ exports.sellBulkTicket = (req, res, _next) => {
         res.status(500).json({msg: err.message})
     }
 }
+
+// find tickets controller
+exports.findAll = (req, res) => {
+    try {
+        const tickets = ticketCollection.find()
+        res.status(200).json({
+            items: tickets,
+            total: tickets.length
+        })
+        
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}
+
+exports.findById = (req, res) => {
+    try {
+        const ticket = ticketCollection.findById(req.params.id)
+        if (!ticket) {
+            res.status(404).json({
+                message: "404 not found"
+            })
+        }
+        res.status(200).json({ticket})
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}
+
+exports.findByUsername = (req, res) => {
+    try {
+        const tickets = ticketCollection.findByUsername(req.params.username)
+
+        res.status(200).json({
+            items: tickets,
+            total: tickets.length
+        })
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}
+
+// update tickets controller
+
+exports.updateById = (req, res) => {
+    const id = req.params.id
+    try {
+        const ticket = ticketCollection.updateById(id, req.body)
+        if (!ticket) {
+            res.status(404).json({
+                message: "404 not found"
+            })
+        }
+        res.status(200).json({ticket})
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}
+
+exports.updateByUsername = (req, res) => {
+    try {
+        const username = req.params.username
+        const tickets = ticketCollection.updateBulk(username, req.body)
+        res.status(200).json({
+            items: tickets,
+            total: tickets.length
+        })
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}
+
+// delete controller
+
+exports.deleteById = (req, res) => {
+    try {
+        const id = req.params.id
+        const isDeleted = ticketCollection.deleteById(id)
+        if (isDeleted) {
+            res.status(204).send()
+        }
+        res.status(400).json({msg: "Delete operation failed"})
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}
+
+exports.deleteByUsername = (req, res) => {
+    try {
+        const username = req.params.username
+        ticketCollection.deleteBulk(username)
+        res.status(204).send()
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}

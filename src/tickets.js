@@ -1,10 +1,13 @@
 const Ticket = require("./Ticket")
+const { readFile, writeFile } = require("./utils")
 
 const tickets = Symbol("tickets")
 
 class TicketCollection {
     constructor() {
-        this[tickets] = []
+        (async function () {
+            this[tickets] = readFile()
+        }).bind(this)
     }
 
     /**
@@ -79,8 +82,10 @@ class TicketCollection {
      */
     updateById(ticketId, ticketBody) {
         let ticket = this.findById(ticketId)
-        ticket.username = ticketBody.username ?? ticket.username
-        ticket.price = ticketBody.price ?? ticket.price
+        if (ticket) {
+            ticket.username = ticketBody.username ?? ticket.username
+            ticket.price = ticketBody.price ?? ticket.price
+        }
         return ticket
     }
 
