@@ -1,0 +1,12 @@
+
+POST  http://localhost:9000/api/v1/tickets
+Content-Type: application/json
+
+{
+    "username": "majed123",
+    "price": 300
+}
+
+###
+
+POST  http://localhost:9000/api/v1/tickets/bulk
