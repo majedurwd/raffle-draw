@@ -1,12 +1,60 @@
+GET http://localhost:9000/health
+
+###
+GET http://localhost:9000/api/v1/tickets
+
+###
 
 POST  http://localhost:9000/api/v1/tickets
 Content-Type: application/json
 
 {
-    "username": "majed123",
+    "username": "majedur999",
     "price": 300
 }
 
 ###
 
+GET http://localhost:9000/api/v1/tickets/t/n4vZoUNet6
+
+###
+
+GET http://localhost:9000/api/v1/tickets/u/parvez
+
+###
+
 POST  http://localhost:9000/api/v1/tickets/bulk
+Content-Type: application/json
+
+{
+    "username": "parvez",
+    "price": 250,
+    "quantity": 5
+}
+
+###
+
+PUT http://localhost:9000/api/v1/tickets/t/ovmWKkVJ2
+Content-Type: application/json
+
+{
+    "username": "majedur69"
+}
+
+###
+
+PUT http://localhost:9000/api/v1/tickets/u/majedur
+Content-Type: application/json
+
+{
+    "username": "majedur99",
+    "price": 250
+}
+
+###
+
+DELETE  http://localhost:9000/api/v1/tickets/t/4ZGeONYde
+
+###
+DELETE  http://localhost:9000/api/v1/tickets/u/majedur999
+

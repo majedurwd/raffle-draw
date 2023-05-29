@@ -23,13 +23,14 @@ exports.sellSingleTicket = (req, res, _next) => {
 exports.sellBulkTicket = (req, res, _next) => {
     try {
         const { username, price, quantity } = req.body
+        console.log(username, price, quantity);
         const bulkTicket = ticketCollection.createBulk(username, price, quantity)
         res.status(201).json({
             msg: "Bulk ticket created successfully",
             bulkTicket,
         })
     } catch (err) {
-        res.status(500).json({msg: err.message})
+        res.status(500).json({msg: err.message, stack: err.stack})
     }
 }
 
@@ -43,7 +44,7 @@ exports.findAll = (req, res) => {
         })
         
     } catch (err) {
-        res.status(500).json({msg: err.message})
+        res.status(500).json({msg: err.message, stack: err.stack})
     }
 }
 
@@ -111,7 +112,7 @@ exports.deleteById = (req, res) => {
         const id = req.params.id
         const isDeleted = ticketCollection.deleteById(id)
         if (isDeleted) {
-            res.status(204).send()
+            return res.status(204).send()
         }
         res.status(400).json({msg: "Delete operation failed"})
     } catch (err) {
@@ -124,6 +125,17 @@ exports.deleteByUsername = (req, res) => {
         const username = req.params.username
         ticketCollection.deleteBulk(username)
         res.status(204).send()
+    } catch (err) {
+        res.status(500).json({msg: err.message})
+    }
+}
+
+// Draw Controller
+exports.drawWinners = (req, res) => {
+    try {
+        const wc = req.query.WC ?? 3
+        const winners = ticketCollection.draw(wc)
+        res.status(200).json({winners})
     } catch (err) {
         res.status(500).json({msg: err.message})
     }

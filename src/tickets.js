@@ -6,8 +6,8 @@ const tickets = Symbol("tickets")
 class TicketCollection {
     constructor() {
         (async function () {
-            this[tickets] = readFile()
-        }).bind(this)
+            this[tickets] = await readFile()
+        }.call(this))
     }
 
     /**
@@ -19,6 +19,7 @@ class TicketCollection {
     create(username, price) {
         const ticket = new Ticket(username, price)
         this[tickets].push(ticket)
+        writeFile(this[tickets])
         return ticket
     }
 
@@ -31,9 +32,11 @@ class TicketCollection {
      */
     createBulk(username, price, quantity) {
         let result = []
+        console.log(result);
         for (let i = 0; i < quantity; i++){
             result.push(this.create(username, price))
         }
+        writeFile(this[tickets])
         return result
     }
 
@@ -65,13 +68,11 @@ class TicketCollection {
      * @returns {Ticket[]}
      */
     findByUsername(username) {
-        const tickets = this[tickets].filter(
-            /**
-             * @param {Ticket} ticket
-             */
+        const userTickets = this[tickets].filter(
             (ticket) => ticket.username === username
         )
-        return tickets
+        
+        return userTickets
     }
 
     /**
@@ -86,6 +87,7 @@ class TicketCollection {
             ticket.username = ticketBody.username ?? ticket.username
             ticket.price = ticketBody.price ?? ticket.price
         }
+        writeFile(this[tickets])
         return ticket
     }
 
@@ -103,6 +105,7 @@ class TicketCollection {
              */
             (ticket) => this.updateById(ticket.id, ticketBody)
         )
+        writeFile(this[tickets])
         return updatedTickets
     }
 
@@ -121,7 +124,9 @@ class TicketCollection {
         if (index === -1) {
             return false
         } else {
-            this[tickets].slice(index, 1)
+            console.log(index);
+            this[tickets].splice(index, 1)
+            writeFile(this[tickets])
             return true
         }
     }
@@ -132,16 +137,18 @@ class TicketCollection {
      * @returns {boolean[]}
      */
     deleteBulk(username) {
-        const tickets = this.findByUsername(username)
-        const deletedResult = tickets.map(
+        const userTickets = this.findByUsername(username)
+        console.log(userTickets);
+        const deletedResult = userTickets.map(
             (ticket) => this.deleteById(ticket.id)
         )
+        writeFile(this[tickets])
         return deletedResult
     }
 
     /**
      * find winners
-     * @param {number} winnerCounter 
+     * @param {number} winnerCounter
      * @returns {Ticket[]}
      */
     draw(winnerCounter) {

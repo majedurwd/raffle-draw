@@ -21,7 +21,8 @@ app.use((_req, _res, next) => {
 app.use((err, _req, res, _next) => {
     if (err.status) {
         return res.status(err.status).json({
-            msg: err.message
+            msg: err.message,
+            stack: err.stack
         })
     }
     res.status(500).json({msg: "Something went wrong"})
